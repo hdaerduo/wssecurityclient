@@ -22,6 +22,7 @@
 	   
 	<button onclick="addUser()">add user</button>
 	<button onclick="login()">login</button>
+	<button onclick="securyUser()">access security</button>
 <div id="message"></div>
 	</div>
 </body>
@@ -52,13 +53,27 @@ function login(){
 	$.ajax({
 		url:"http://localhost:8080/user/login",
 		data: JSON.stringify(user),
-	    contentType: "application/json",      
-	    //dataType: "json", 
+	    contentType: "application/json",  
 		method:'POST',
-		//header: {			'Authorization': 'Bearer '+token,		},
 		success: function(data){	
 			token = data;		
 			setMessageInnerHTML(token);
+			},	
+		error: function(XMLHttpRequest, textStatus, errorThrown) {  
+			        alert(XMLHttpRequest.status);  
+			        alert(XMLHttpRequest.readyState);  
+			        alert(textStatus);  
+			    },
+		});	
+}
+
+function securyUser(){
+	$.ajax({
+		url:"http://localhost:8080/secure/user/users", 
+		method:'GET',
+		headers: {			authorization: "Bearer "+token,		},
+		success: function(data){	
+			setMessageInnerHTML(data);
 			},	
 		error: function(XMLHttpRequest, textStatus, errorThrown) {  
 			        alert(XMLHttpRequest.status);  
