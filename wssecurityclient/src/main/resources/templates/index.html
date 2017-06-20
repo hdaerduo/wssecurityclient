@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http:www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta content="text/html" charset="UTF-8" />
+<link
+	th:href="@{http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.min.css}"
+	rel="stylesheet" />
+<link
+	href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap-theme.min.css"
+	rel="stylesheet" />
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script
+	src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js"></script>	
+<title>Web socket with the </title>
+</head>
+
+<body>
+	<div id="Content">
+	   <h1>test</h1>
+	   
+	<button onclick="addUser()">add user</button>
+	<button onclick="login()">login</button>
+<div id="message"></div>
+	</div>
+</body>
+
+<script type="text/javascript">
+
+var user = 		{
+			userId:10,
+			firstName: "liu",
+			lastName: "bangbang",
+		     email: "xxxxx@gmail.com",
+		     password:"000000"
+		};
+		
+var token;
+
+function addUser(){
+	$.ajax({
+		url:"http://localhost:8080/user/register",
+		data:  JSON.stringify(user),
+	    contentType: "application/json;charset=utf-8",      
+	    dataType: "json", 
+		method:'POST',		
+	});
+}
+
+function login(){
+	$.ajax({
+		url:"http://localhost:8080/user/login",
+		data: JSON.stringify(user),
+	    contentType: "application/json",      
+	    //dataType: "json", 
+		method:'POST',
+		//header: {			'Authorization': 'Bearer '+token,		},
+		success: function(data){	
+			token = data;		
+			setMessageInnerHTML(token);
+			},	
+		error: function(XMLHttpRequest, textStatus, errorThrown) {  
+			        alert(XMLHttpRequest.status);  
+			        alert(XMLHttpRequest.readyState);  
+			        alert(textStatus);  
+			    },
+		});	
+}
+
+function setMessageInnerHTML(innerHTML) {
+	document.getElementById('message').innerHTML += innerHTML + '<br/>';
+}
+
+	
+	</script>
+	
+</html>
