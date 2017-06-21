@@ -19,10 +19,19 @@
 <body>
 	<div id="Content">
 	   <h1>test</h1>
-	   
+	
+	<input id="text" type="text" />
+	
 	<button onclick="addUser()">add user</button>
+	
 	<button onclick="login()">login</button>
+	
 	<button onclick="securyUser()">access security</button>
+	
+	<button onclick="openwebsocket()">openwebsocket</button>
+	
+	<button onclick="send()">send</button>
+	
 <div id="message"></div>
 	</div>
 </body>
@@ -38,6 +47,7 @@ var user = 		{
 		};
 		
 var token;
+var websocket = null;
 
 function addUser(){
 	$.ajax({
@@ -87,7 +97,42 @@ function setMessageInnerHTML(innerHTML) {
 	document.getElementById('message').innerHTML += innerHTML + '<br/>';
 }
 
-	
+function openwebsocket(){
+	//websocket = new WebSocket("ws://localhost:8080/websocket");
+	websocket = new WebSocket("ws://localhost:8080/websocket?token="+token);
+
+	//连接发生错误的回调方法  
+	websocket.onerror = function() {
+		setMessageInnerHTML("error");
+	};
+
+	//连接成功建立的回调方法  
+	websocket.onopen = function(event) {
+		setMessageInnerHTML("open");
+	}
+
+	//接收到消息的回调方法  
+	websocket.onmessage = function(event) {
+		setMessageInnerHTML("receive"+ event.data);
+	}
+
+	//连接关闭的回调方法  
+	websocket.onclose = function() {
+		setMessageInnerHTML("close");
+	}
+}
+
+function closeWebSocket() {
+	if(websocket!=null){
+		websocket.close();		
+	}
+}
+
+//发送消息  
+function send() {
+	var message = document.getElementById('text').value;
+	websocket.send(message);
+}
 	</script>
 	
 </html>
